@@ -1,11 +1,12 @@
 import styled from 'styled-components'
-import { BoardList } from './BoardList'
+import { TablesList } from './TablesList'
 
-import { useDispatch } from 'react-redux'
-import { addTables } from '../../store/tablesSlice'
+// import { useDispatch } from 'react-redux'
+// import { addTables } from '../../store/tablesSlice'
 
 const StyledBoard = styled.div`
   display: flex;
+  gap: 10px;
   flex-direction: column;
   flex-grow: 1;
   background-color: #171b34;
@@ -17,15 +18,15 @@ const BoardTitle = styled.h2`
 `
 
 export const Board = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const addTable = () => dispatch(addTables({ name: 'Новая таблица' }))
+  // const addTable = () => dispatch(addTables({ name: 'Новая таблица' }))
 
   return (
     <StyledBoard>
       <BoardTitle>Название</BoardTitle>
-      <button onClick={addTable}>Добавить</button>
-      <BoardList />
+      {/* <button onClick={addTable}>Добавить</button> */}
+      <TablesList />
     </StyledBoard>
   )
 }

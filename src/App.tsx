@@ -1,11 +1,8 @@
-
 import styled from 'styled-components'
 import { Header } from './components/layout/Header'
 import { Main } from './components/layout/Main'
 import { Footer } from './components/layout/Footer'
 
-
-function App() {
 
   const Container = styled.div`
     display: flex;
@@ -19,6 +16,7 @@ function App() {
     color: #babfc5;
   `
 
+function App() {
   return (
     <Container>
       <Header />
