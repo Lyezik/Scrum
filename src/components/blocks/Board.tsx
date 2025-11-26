@@ -20,7 +20,7 @@ const BoardTitle = styled.h2`
 export const Board = () => {
   // const dispatch = useDispatch();
 
-  // const addTable = () => dispatch(addTables({ name: 'Новая таблица' }))
+  // const addTable = () => dispatch(addTables({ title: 'Новая таблица' }))
 
   return (
     <StyledBoard>

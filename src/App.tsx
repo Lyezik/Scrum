@@ -1,28 +1,16 @@
-import styled from 'styled-components'
-import { Header } from './components/layout/Header'
-import { Main } from './components/layout/Main'
-import { Footer } from './components/layout/Footer'
+import { HomePage } from './components/pages/HomePage'
+import { UserPage } from './components/pages/UserPage'
+import { Routes, Route } from 'react-router-dom'
 
-
-  const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    max-width: 1920px;
-    min-width: 320px;
-    padding: 0 40px;
-    margin: 0 auto;
-    background-color:#31324e;
-    color: #babfc5;
-  `
 
 function App() {
   return (
-    <Container>
-      <Header />
-      <Main />
-      <Footer />
-    </Container>
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/userPage" element={<UserPage />} />
+      </Routes>
+    </>
   )
 }
 

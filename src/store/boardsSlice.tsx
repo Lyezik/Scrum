@@ -5,6 +5,7 @@ interface IBoard {
     boards: {
         id: string;
         name: string;
+
     }[]
 };
 const initialState: IBoard = {
@@ -21,12 +22,6 @@ const boardsSlice = createSlice({
                 name: action.payload.name,
             });
         },
-        // addTables(state, action) {
-        //     state.boards.tables.push({
-        //         id: nanoid(),
-        //         name: action.payload.name,
-        //     });
-        // },
     },
 });
 
