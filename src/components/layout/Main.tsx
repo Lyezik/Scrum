@@ -11,8 +11,9 @@ const MainContainer = styled.div `
 export const Main = () => {
   return (
     <MainContainer>
-      <Menu />
-      <Board />
+      Зарегистрируйтесь или войдите
+      {/* <Menu /> */}
+      {/* <Board /> */}
     </MainContainer>
   )
 }

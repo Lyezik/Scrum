@@ -33,7 +33,7 @@ export const BoardsList = () => {
                     return (
                         <StyledButton
                             key={item.id}
-                            onClick={() => { navigate(`/ptojects/${item.id}`) }}
+                            onClick={() => { navigate(`/projects/${item.id}`) }}
                         >Доска
                         </StyledButton>
                     )
