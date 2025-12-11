@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const StyledFormContainer = styled.div`
     position: absolute;
@@ -47,9 +49,22 @@ interface FormProps {
     setIsOpenAuth: (isOpen: boolean) => void
 }
 
+
 const Form = ({ title, handleClick, setIsOpenAuth }: FormProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
+
+    function handleNavigate() {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                navigate('/user');
+            }
+        });
+
+    }
 
     return (
         <StyledFormContainer>
@@ -70,7 +85,11 @@ const Form = ({ title, handleClick, setIsOpenAuth }: FormProps) => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
-                    onClick={() => handleClick(email, password)}
+                    onClick={() => {
+                        handleClick(email, password)
+                        handleNavigate()
+                    }}
+
                 >
                     {title}
                 </button>

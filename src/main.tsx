@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import store from './store/store.tsx';
 import GlobalStyle from './components/styled/GlobalStyle';
 import App from './App';
-// import './firebase.js';
+import './firebase'
 
 
 createRoot(document.getElementById('root')!).render(
