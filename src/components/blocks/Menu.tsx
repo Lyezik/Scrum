@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 import { BoardsList } from './BoardsList'
+import { useState } from 'react'
+import { NewBoardModal } from './NewBoardModal'
 
-import { useDispatch } from 'react-redux'
-import { addBoards } from '../../store/boardsSlice'
+// import { useDispatch } from 'react-redux'
+// import { addBoards } from '../../store/boardsSlice'
 
 const StyledMenu = styled.div`
   display: flex;
@@ -22,14 +24,20 @@ const StyledMenuButton = styled.button`
 `
 
 export const Menu = () => {
-  const dispatch = useDispatch()
-
-  const addBoard = () => { dispatch(addBoards({ name: 'Новая доска' })) }
+  const [isOpenCreateBoard, setIsOpenCreateBoard] = useState(false) //открывает окно создания доски
 
   return (
     <StyledMenu>
-      <StyledMenuButton onClick={addBoard}>Создать новую доску</StyledMenuButton>
+      <StyledMenuButton onClick={()=>setIsOpenCreateBoard(true)}>Создать новую доску</StyledMenuButton>
       <BoardsList />
+
+      { 
+        isOpenCreateBoard && (                         // окно создания доски
+          <NewBoardModal 
+            setIsOpenCreateBoard={setIsOpenCreateBoard}
+          />
+        )
+      }
     </StyledMenu>
   )
 }

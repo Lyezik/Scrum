@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Header } from '../layout/Header'
 import { Footer } from '../layout/Footer'
 
-const Container = styled.div`
+const StyledContainer = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -16,13 +16,13 @@ const Container = styled.div`
 
 const StartPage = () => {
     return (
-        <Container>
+        <StyledContainer>
             <Header />
             <main>    {/* добавить элемент StartMain */}
                 Авторизируйтесь
             </main>
             <Footer />
-        </Container>
+        </StyledContainer>
     )
 }
 

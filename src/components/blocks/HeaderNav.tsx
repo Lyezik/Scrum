@@ -2,6 +2,21 @@ import styled from "styled-components"
 import { useState } from "react"
 import { SignUp } from "../auth/SignUp"
 import { Login } from "../auth/Login"
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import { useDispatch } from "react-redux";
+import { removeUser } from "../../store/userSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
+
+const StyledNav = styled.nav`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+`
 
 const StyledHeaderButton = styled.button`
   
@@ -15,19 +30,35 @@ const StyledNavButtons = styled.div`
 const HeaderNav = () => {
     const [isOpenLogin, setIsOpenLogin] = useState(false);
     const [isOpenRegister, setIsOpenRegister] = useState(false);
-    // const [isOpenAuth, setIsOpenAuth] = useState(false);
-
+    const isAuth = useSelector((state: RootState) => state.user.uid);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     return (
-        <nav>
+        <StyledNav>
+            <a href="/user">Мои проекты</a>
             <StyledNavButtons>
-                <StyledHeaderButton
-                    onClick={() => setIsOpenLogin(!isOpenLogin)}
-                >Login
-                </StyledHeaderButton>
-                <StyledHeaderButton
-                    onClick={() => setIsOpenRegister(!isOpenRegister)}
-                >Register
-                </StyledHeaderButton>
+
+                {!isAuth ? (
+                    <>
+                        <StyledHeaderButton
+                            onClick={() => setIsOpenLogin(!isOpenLogin)}
+                        >Login
+                        </StyledHeaderButton>
+                        <StyledHeaderButton
+                            onClick={() => setIsOpenRegister(!isOpenRegister)}
+                        >Register
+                        </StyledHeaderButton>
+                    </>
+                ) : (
+                    <StyledHeaderButton
+                        onClick={() => {
+                            dispatch(removeUser())
+                            signOut(auth);
+                            navigate('/');
+                        }}
+                    >Выйти
+                    </StyledHeaderButton>
+                )}
             </StyledNavButtons>
 
             {isOpenRegister && <SignUp
@@ -36,7 +67,7 @@ const HeaderNav = () => {
             {isOpenLogin && <Login
                 setIsOpenLogin={setIsOpenLogin}
             />}
-        </nav>
+        </StyledNav>
     )
 }
 

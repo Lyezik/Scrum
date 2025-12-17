@@ -1,5 +1,5 @@
 import { StartPage } from './components/pages/StartPage'
-import { Layout } from './components/layout/Layout'
+import { ProtectedRoutes } from './components/layout/ProtectedRoutes'
 import { HomePage } from './components/pages/HomePage'
 import { Routes, Route } from 'react-router-dom'
 
@@ -10,7 +10,7 @@ function App() {
     <Routes>
       <Route path="/" element={<StartPage />} />
 
-      <Route path="/user" element={<Layout />}>
+      <Route path="/user" element={<ProtectedRoutes />}>
         <Route index element={<HomePage />} />
       </Route>
     </Routes>
