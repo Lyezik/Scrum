@@ -1,7 +1,4 @@
-
 import { Main } from "../layout/Main"
-
-
 
 const HomePage = () => {
 

@@ -1,6 +1,11 @@
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { db } from "../../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect } from "react";
+import { useState } from "react";
+import store from "../../store/store";
 
 const StyledBoardList = styled.ul`
     display: flex;
@@ -16,27 +21,46 @@ const StyledButton = styled.button`
     cursor: pointer;
 `
 
-interface State {
-    boards: {
-        boards: { id: string; name: string; tables: [] }[];
-    };
+interface IBoard {
+    id: string;
+    name: string;
+    ownerUid: string;
+    tables: []
 }
 
 export const BoardsList = () => {
-    const boards = useSelector((state: State) => state.boards.boards);
-    const navigate = useNavigate();
+    const [boards, setBoards] = useState<IBoard[]>([]);
+    const Uid = store.getState().user.uid;
+
+
+    useEffect(() => {
+        async function getBoards() {
+            const querySnapshot = await getDocs(collection(db, "boards")); //массив всех документов boards
+            const data = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                name: doc.data().name,
+                tables: doc.data().tables || [],
+                ownerUid: doc.data().ownerUid,
+            }));
+            setBoards(data);
+        }
+        getBoards();
+    }, []);
 
     return (
         <StyledBoardList>
             {
                 boards.map((item) => {
-                    return (
-                        <StyledButton
-                            key={item.id}
-                            onClick={() => { navigate(`/projects/${item.id}`) }}
-                        >Доска
-                        </StyledButton>
-                    )
+
+                    if (Uid === item.ownerUid) {
+                        return (
+                            <StyledButton
+                                key={item.id}
+                            // onClick={() => { navigate(`/projects/${item.id}`) }}
+                            >{item.name}
+                            </StyledButton>
+                        )
+                    }
                 })
             }
         </StyledBoardList>

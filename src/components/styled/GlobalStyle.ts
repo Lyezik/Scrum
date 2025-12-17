@@ -62,6 +62,8 @@ h3, h4 {
 a:not([class]) {
   text-decoration-skip-ink: auto;
   color: currentColor;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* Make images easier to work with */
