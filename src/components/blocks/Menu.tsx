@@ -1,10 +1,7 @@
 import styled from 'styled-components'
 import { BoardsList } from './BoardsList'
 import { useState } from 'react'
-import { NewBoardModal } from './NewBoardModal'
-
-// import { useDispatch } from 'react-redux'
-// import { addBoards } from '../../store/boardsSlice'
+import { CreateBoardModal } from './CreateBoardModal'
 
 const StyledMenu = styled.div`
   display: flex;
@@ -33,7 +30,7 @@ export const Menu = () => {
 
       { 
         isOpenCreateBoard && (                         // окно создания доски
-          <NewBoardModal 
+          <CreateBoardModal 
             setIsOpenCreateBoard={setIsOpenCreateBoard}
           />
         )

@@ -1,15 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import tablesReducer from "./tablesSlice";
+// import tablesReducer from "./tablesSlice";
 import userReducer from "./userSlice";
-import boardsReducer from "./boardsSlice";
+// import boardsReducer from "./boardsSlice";
+import { boardsApi } from "./boardsSlice";
 
 const store = configureStore({
     reducer: {
-        tables: tablesReducer,
+        // tables: tablesReducer,
         user: userReducer,
-        boards: boardsReducer,
+        [boardsApi.reducerPath]: boardsApi.reducer,
     },
+    middleware: (getDefault) => getDefault().concat(boardsApi.middleware),
 });
 
 export default store;
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
