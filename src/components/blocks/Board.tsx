@@ -1,8 +1,9 @@
 import styled from 'styled-components'
-import { TablesList } from './TablesList'
+import { ColumnsList } from './ColumnsList'
+import { useParams } from 'react-router-dom'
+import { useSubscribeAllBoardsQuery, useAddColumnMutation } from '../../store/boardsSlice'
+import { useState } from 'react'
 
-// import { useDispatch } from 'react-redux'
-// import { addTables } from '../../store/tablesSlice'
 
 const StyledBoard = styled.div`
   display: flex;
@@ -13,20 +14,69 @@ const StyledBoard = styled.div`
   border-radius: 20px;
   padding: 10px;
 `
+
+const StyledBoardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const BoardTitle = styled.h2`
   color: #f1f5f4;
 `
 
+const StyledButton = styled.button`
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+`
+
 export const Board = () => {
-  // const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [columnName, setColumnName] = useState('');
+  const params = useParams();
+  const boardId = params.id;
 
-  // const addTable = () => dispatch(addTables({ title: 'Новая таблица' }))
+  const { data } = useSubscribeAllBoardsQuery();
+  const [addColumn] = useAddColumnMutation();
 
-  return (
-    <StyledBoard>
-      <BoardTitle>Название</BoardTitle>
-      {/* <button onClick={addTable}>Добавить</button> */}
-      <TablesList />
-    </StyledBoard>
-  )
+  const handkeEnterDown = (e: KeyboardEvent | React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+
+      addColumn({ boardId, columnName: columnName || 'Новая колонка' });
+      setIsOpen(false);
+      setColumnName('');
+    }
+  }
+
+  if (data) {
+    const currentBoard = data.find((board) => board.id === boardId);
+
+    if (currentBoard) {
+      return (
+        < StyledBoard >
+
+          <StyledBoardHeader>
+            <BoardTitle>{currentBoard.name}</BoardTitle>
+            {
+              isOpen ? (
+                <input
+                  type="text"
+                  placeholder="Название колонки"
+                  value={columnName}
+                  onChange={(e) => setColumnName(e.target.value)}
+                  onKeyDown={handkeEnterDown}
+
+                />
+              ) : (
+                <StyledButton onClick={() => setIsOpen(!isOpen)}>Добавить колонку</StyledButton>
+              )
+            }
+
+          </StyledBoardHeader>
+
+          <ColumnsList />
+        </StyledBoard >
+      )
+    }
+  }
 }

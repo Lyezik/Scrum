@@ -81,8 +81,10 @@ textarea, select {
 
 /* Make sure textarea without a rows attribute are not tiny */
 textarea:not([rows]) {
-  min-height: 10em;
+  border: none;
+  outline: none;
 }
+/* ::-webkit-scrollbar { display: none; } */
 
 /* Anything that has been anchored to should have extra scroll margin */
 :target {

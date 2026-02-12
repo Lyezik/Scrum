@@ -1,31 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
+// import { createSlice } from "@reduxjs/toolkit";
+
+// // interface ITable {
+// //     tables: {
+// //         id: string;
+// //         title: string;
+// //     }[];
+// // };
+
+// // const initialState: ITable = {
+// //     tables: [],
+// // };
 
 
-interface ITable {
-    tables: {
-        id: string;
-        title: string;
-    }[];
-};
+// const tablesSlice = createSlice({
+//     name: 'tables',
+//     initialState: {},
+//     reducers: {
+//         // addTables(state, action) {
+//         //     state.tables.push({
+//         //         id: nanoid(),
+//         //         title: action.payload.title,
+//         //     });
+//         //     console.log(initialState)
+//         // },
+//     },
+// });
 
-const initialState: ITable = {
-    tables: [],
-};
-
-const tablesSlice = createSlice({
-    name: 'tables',
-    initialState,
-    reducers: {
-        addTables(state, action) {
-            state.tables.push({
-                id: nanoid(),
-                title: action.payload.title,
-            });
-            console.log(initialState)
-        },
-    },
-});
-
-export const { addTables } = tablesSlice.actions;
-export default tablesSlice.reducer;
+// export const {  } = tablesSlice.actions;
+// export default tablesSlice.reducer;

@@ -1,8 +1,7 @@
 import styled from 'styled-components'
-import { db } from '../../firebase'
-import { collection, addDoc } from "firebase/firestore";
 import { useState } from 'react';
 import store from '../../store/store';
+import { useAddBoardMutation } from '../../store/boardsSlice';
 
 
 const StyledModalContainer = styled.div`
@@ -40,22 +39,18 @@ interface Props {
   setIsOpenCreateBoard: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const NewBoardModal: React.FC<Props> = ({ setIsOpenCreateBoard }) => {
+export const CreateBoardModal: React.FC<Props> = ({ setIsOpenCreateBoard }) => {
   const [nameBoard, setNameBoard] = useState('')
   const Uid = store.getState().user.uid; // Uid текущего пользователя
 
-  async function createBoard() {
-    try {
-      await addDoc(collection(db, "boards"), {
-        name: nameBoard,
-        ownerUid: Uid,
-        tables: []
-      });
-      setIsOpenCreateBoard(false);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  }
+  const [addBoard] = useAddBoardMutation();
+  const createBoard = async () => {
+    await addBoard({
+      name: nameBoard,
+      ownerUid: Uid,
+    });
+    setIsOpenCreateBoard(false); // закрывает модальное окно
+  };
 
   return (
     <StyledModalContainer>
