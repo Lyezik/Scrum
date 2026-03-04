@@ -8,7 +8,6 @@ const StyledContainer = styled.div`
     min-height: 100vh;
     max-width: 1920px;
     min-width: 320px;
-    padding: 0 40px;
     margin: 0 auto;
     background-color:#31324e;
     color: #babfc5;

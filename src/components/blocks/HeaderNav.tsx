@@ -4,14 +4,17 @@ import { SignUp } from "../auth/SignUp"
 import { Login } from "../auth/Login"
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
+import { Menu } from "./Menu";
 import { useDispatch } from "react-redux";
 import { removeUser } from "../../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
 
+
 const StyledNav = styled.nav`
     display: flex;
+    flex-direction: column;
     width: 100%;
     align-items: center;
     gap: 10px;
@@ -19,7 +22,9 @@ const StyledNav = styled.nav`
 `
 
 const StyledHeaderButton = styled.button`
-  
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
 `
 const StyledNavButtons = styled.div`
     display: flex;
@@ -60,7 +65,7 @@ const HeaderNav = () => {
                     </StyledHeaderButton>
                 )}
             </StyledNavButtons>
-
+            <Menu />
             {isOpenRegister && <SignUp
                 setIsOpenRegister={setIsOpenRegister}
             />}

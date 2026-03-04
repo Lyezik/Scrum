@@ -7,15 +7,20 @@ import { useNavigate } from "react-router-dom";
 const StyledBoardList = styled.ul`
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
+    background-color: #252b35;
 `
 
 const StyledButton = styled.button`
     width: 100%;
+    color: #e7ebf1;
     border-radius: 5px;
     border: none;
-    padding: 25px 0;
+    background-color: #252b35;
     cursor: pointer;
+     &&:hover {
+        background-color: #3c424f;
+    }
 `
 export const BoardsList = () => {
     const uid = useSelector((state: RootState) => state.user.uid);

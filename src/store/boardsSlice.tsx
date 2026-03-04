@@ -1,5 +1,6 @@
 import { db } from "../firebase";
-import { onSnapshot, collection, addDoc } from "firebase/firestore";
+import { onSnapshot, collection, addDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { createApi, fakeBaseQuery, } from '@reduxjs/toolkit/query/react';
 
 export interface IBoard {
     id: string;
@@ -12,10 +13,15 @@ export interface IColumn {
     name: string;
 }
 
-import { createApi, fakeBaseQuery, } from '@reduxjs/toolkit/query/react'
+export interface ITask {
+    id: string;
+    name: string;
+    columnId: string;
+    order: number;
+}
 
-export const boardsApi = createApi({
-    reducerPath: 'boardsApi',
+export const api = createApi({
+    reducerPath: 'api',
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Boards'],
     endpoints: (build) => ({
@@ -36,12 +42,6 @@ export const boardsApi = createApi({
                 await cacheEntryRemoved;  // ждём, пока кэш перестанет быть нужным
                 unsubscribe();
             },
-            // это не нужно, потому что у нас и так постоянно отслеживаются изменения???
-
-            // providesTags: (result) =>
-            //     result
-            //         ? [...result.map(({ id }) => ({ type: 'Boards' as const, id })), 'Boards']
-            //         : ['Boards'  as const],
         }),
 
         subscribeAllColumns: build.query<IColumn[], { boardId: string }>({
@@ -64,7 +64,7 @@ export const boardsApi = createApi({
             },
         }),
 
-        subscribeAllTasks: build.query<IColumn[], { boardId: string, columnId: string }>({
+        subscribeAllTasks: build.query<ITask[], { boardId: string, columnId: string }>({
             async queryFn() { return { data: [] }; },
 
             async onCacheEntryAdded(arg, { updateCachedData, cacheEntryRemoved }) {
@@ -76,7 +76,7 @@ export const boardsApi = createApi({
                         snapshot.docs.map((doc) => ({
                             id: doc.id,
                             ...doc.data()
-                        })) as IColumn[]
+                        })) as ITask[]
                     );
                 });
                 await cacheEntryRemoved;  // ждём, пока кэш перестанет быть нужным
@@ -119,10 +119,101 @@ export const boardsApi = createApi({
                     return { error: e };
                 }
             },
-        })
+        }),
+
+        deleteBoard: build.mutation<void, { boardId: string }>({
+            async queryFn({ boardId }) {
+                try {
+                    async function deleteCollection(path: string) {
+                        const colRef = collection(db, path);
+                        const snapshot = await getDocs(colRef);
+
+                        const promises = snapshot.docs.map((d) =>
+                            deleteDoc(doc(db, path, d.id))
+                        );
+
+                        await Promise.all(promises);
+                    }
+
+                    async function deleteBoardWithColumnsAndTasks(boardId: string) {
+                        const columnsSnap = await getDocs(collection(db, `boards/${boardId}/columns`));
+
+                        const deleteTasksPromises = columnsSnap.docs.map(async (columnDoc) => {
+                            const columnId = columnDoc.id;
+                            await deleteCollection(`boards/${boardId}/columns/${columnId}/tasks`);
+                        });
+
+                        await Promise.all(deleteTasksPromises);
+
+                        await deleteCollection(`boards/${boardId}/columns`);
+
+                        await deleteDoc(doc(db, `boards/${boardId}`));
+                    }
+
+                    await deleteBoardWithColumnsAndTasks(boardId);
+                    return { data: undefined };
+                } catch (error) {
+                    return { error };
+                }
+            }
+        }),
+
+        deleteColumn: build.mutation<void, { boardId: string; columnId: string }>({
+            async queryFn({ boardId, columnId }) {
+                try {
+                    async function deleteCollection(path: string) {
+                        const colRef = collection(db, path);
+                        const snapshot = await getDocs(colRef);
+
+                        const promises = snapshot.docs.map((d) =>
+                            deleteDoc(doc(db, path, d.id))
+                        );
+
+                        await Promise.all(promises);
+                    }
+
+                    async function deleteColumnWithTasks(boardId: string, columnId: string) {
+                        await deleteCollection(`boards/${boardId}/columns/${columnId}/tasks`);
+                        await deleteDoc(doc(db, `boards/${boardId}/columns/${columnId}`));
+                    }
+
+                    await deleteColumnWithTasks(boardId, columnId);
+                    return { data: undefined };
+                } catch (error) {
+                    return { error };
+                }
+            },
+
+            onQueryStarted: async ({ boardId, columnId }, { dispatch, queryFulfilled }) => {
+                const patch = dispatch(
+                    api.util.updateQueryData("subscribeAllColumns", { boardId }, (draft) => {
+                        return draft.filter((col) => col.id !== columnId);
+                    })
+                );
+
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patch.undo();
+                }
+            }
+        }),
+
+        deleteTask: build.mutation<void, { boardId: string; columnId: string; taskId: string }>({
+            async queryFn({ boardId, columnId, taskId }) {
+                try {
+                    const path = `boards/${boardId}/columns/${columnId}/tasks`;
+                    await deleteDoc(doc(db, path, taskId))
+                    return { data: undefined };
+                } catch (error) {
+                    return { error };
+                }
+            },
+        }),
 
     }),
 })
+
 
 
 export const {
@@ -131,5 +222,8 @@ export const {
     useSubscribeAllTasksQuery,
     useAddBoardMutation,
     useAddColumnMutation,
-    useAddTaskMutation
-} = boardsApi
+    useAddTaskMutation,
+    useDeleteBoardMutation,
+    useDeleteColumnMutation,
+    useDeleteTaskMutation
+} = api

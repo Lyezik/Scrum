@@ -1,23 +1,23 @@
 import styled from 'styled-components'
 import { ColumnsList } from './ColumnsList'
 import { useParams } from 'react-router-dom'
-import { useSubscribeAllBoardsQuery, useAddColumnMutation } from '../../store/boardsSlice'
+import { useSubscribeAllBoardsQuery, useAddColumnMutation, useDeleteBoardMutation } from '../../store/boardsSlice'
 import { useState } from 'react'
 
 
 const StyledBoard = styled.div`
   display: flex;
-  gap: 10px;
-  flex-direction: column;
   flex-grow: 1;
-  background-color: #171b34;
-  border-radius: 20px;
-  padding: 10px;
+  height: 100%;
+  flex-direction: column;
+  background-color: #252b35;
+  overflow-x: hidden;
 `
 
 const StyledBoardHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 25px 10px;
 `
 
 const BoardTitle = styled.h2`
@@ -33,6 +33,7 @@ const StyledButton = styled.button`
 export const Board = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [columnName, setColumnName] = useState('');
+  const [deleteBoard] = useDeleteBoardMutation();
   const params = useParams();
   const boardId = params.id;
 
@@ -71,6 +72,12 @@ export const Board = () => {
                 <StyledButton onClick={() => setIsOpen(!isOpen)}>Добавить колонку</StyledButton>
               )
             }
+
+            <StyledButton
+              onClick={() => boardId && deleteBoard({ boardId })}
+            >
+              Удалить доску
+            </StyledButton>
 
           </StyledBoardHeader>
 

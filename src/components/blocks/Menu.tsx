@@ -7,15 +7,11 @@ const StyledMenu = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 25%;
-  background-color: #171b34;
-  border-radius: 20px;
-  padding: 15px 11px;
 `
 
 const StyledMenuButton = styled.button`
   width: 100%;
-  border-radius: 5px;
+  border-radius: 2px;
   border: none;
   cursor: pointer;
 `

@@ -10,20 +10,23 @@ const StyledTasksList = styled.ul`
 
 export const TasksList = ({ boardId, columnId }: { boardId: string, columnId: string }) => {
 
-const { data } = useSubscribeAllTasksQuery({ boardId: boardId, columnId: columnId });
+    const { data } = useSubscribeAllTasksQuery({ boardId: boardId, columnId: columnId });
 
     return (
         <StyledTasksList>
             {data &&
-                            data.map((task) => (
-            
-                                <TaskItem
-                                    key={task.id}
-                                    taskId={task.id}
-                                    title={task.name}
-                                />
-                            ))
-                        }
+                data.map((task) => (
+
+                    <TaskItem
+                        key={task.id}
+                        taskId={task.id}
+                        title={task.name}
+                        boardId={boardId}
+                        columnId={columnId}
+                        order={task.order}
+                    />
+                ))
+            }
         </StyledTasksList>
     )
 }

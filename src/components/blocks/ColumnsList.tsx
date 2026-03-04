@@ -6,8 +6,12 @@ import { useParams } from "react-router-dom";
 
 const StyledTablesList = styled.ul`
     display: flex;
-    gap: 10px;
     flex-grow: 1;
+    gap: 10px;
+    padding: 10px 10px 0 10px;
+    background-color: #2b3f62;
+    overflow-x: auto;
+    overflow-y: auto;
 `
 
 export const ColumnsList = () => {

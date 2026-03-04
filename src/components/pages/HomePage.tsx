@@ -1,6 +1,5 @@
 import { Main } from "../layout/Main"
 import { Header } from "../layout/Header"
-import { Footer } from "../layout/Footer"
 
 const HomePage = () => {
 
@@ -8,7 +7,6 @@ const HomePage = () => {
     <>
       <Header />
       <Main />
-      <Footer />
     </>
   )
 }
