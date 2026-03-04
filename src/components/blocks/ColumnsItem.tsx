@@ -2,14 +2,17 @@ import styled from "styled-components"
 import { TasksList } from "./TasksList"
 import { useState } from "react"
 import { useCallback } from "react"
-import { useAddTaskMutation } from "../../store/boardsSlice"
+import { useAddTaskMutation, useDeleteColumnMutation } from "../../store/boardsSlice"
 import { useParams } from "react-router-dom"
 
 const StyledColumnsItem = styled.li`
+     display: flex;
+     flex-direction: column;
      background-color: #31324e;
      border-radius: 10px;
      padding: 10px;
-     width: 150px;
+     min-width: 250px;
+     width: 250px;
 `
 
 const StyledColumnsTitle = styled.h3`
@@ -23,10 +26,14 @@ const StyledButton = styled.button`
     border: none;
     cursor: pointer;
     font-size: 16px;
+    margin-bottom: 10px;
 `
 
 const StyledAddTaskPopup = styled.textarea`
     width: 100%;
+    margin-bottom: 10px;
+    min-height: 40px;
+    height: 40px;
     resize: none;
     overflow: hidden;
     border-radius: 5px;
@@ -43,6 +50,7 @@ export const ColumnsItem: React.FC<ColumnsListProps> = ({ title, columnId }) => 
     const [isOpen, setIsOpen] = useState(false)
     const [taskName, setTaskName] = useState('')
     const [addTask] = useAddTaskMutation()
+    const [deleteColumn] = useDeleteColumnMutation();
     const params = useParams();
     const boardId = params.id;
 
@@ -66,6 +74,7 @@ export const ColumnsItem: React.FC<ColumnsListProps> = ({ title, columnId }) => 
             {
                 isOpen ? (
                     <StyledAddTaskPopup
+                        autoFocus
                         placeholder="Введите название задачи"
                         onChange={(e) => {
                             autoHeightTextarea(e)
@@ -83,7 +92,13 @@ export const ColumnsItem: React.FC<ColumnsListProps> = ({ title, columnId }) => 
                 )
             }
 
-            <TasksList 
+            <StyledButton
+                onClick={() => deleteColumn({ boardId, columnId })}
+            >
+                Удалить колонку
+            </StyledButton>
+
+            <TasksList
                 boardId={boardId}
                 columnId={columnId}
             />
